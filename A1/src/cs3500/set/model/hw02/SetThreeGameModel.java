@@ -143,7 +143,7 @@ public class SetThreeGameModel implements SetGameModel {
   @Override
   public int getScore() throws IllegalStateException {
     if (score == -1) {
-      throw new IllegalStateException("Game has not been initialized (score check).");
+      throw new IllegalStateException("Game has not been initialized (score check). IM THE BOOGY MAN");
     } else {
       return score;
     }
