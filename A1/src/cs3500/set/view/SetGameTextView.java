@@ -1,5 +1,7 @@
 package cs3500.set.view;
 
+import java.io.IOException;
+
 import cs3500.set.model.hw02.SetGameModelState;
 
 /**
@@ -8,6 +10,7 @@ import cs3500.set.model.hw02.SetGameModelState;
  */
 public class SetGameTextView implements SetGameView {
   public SetGameModelState state;
+  public Appendable view;
 
   /**
    * Initializes the Viewer.
@@ -19,7 +22,17 @@ public class SetGameTextView implements SetGameView {
       throw new IllegalArgumentException("State is null.");
     }
 
+    this.view = System.out;
     this.state = state;
+  }
+
+  public SetGameTextView(SetGameModelState state, Appendable view) throws IllegalArgumentException {
+    if (state == null || view == null) {
+      throw new IllegalArgumentException("State or view is null.");
+    }
+
+    this.state = state;
+    this.view = view;
   }
 
   /**
@@ -37,5 +50,15 @@ public class SetGameTextView implements SetGameView {
             + state.getCardAtCoord(2, 0).toString() + " "
             + state.getCardAtCoord(2, 1).toString() + " "
             + state.getCardAtCoord(2, 2).toString();
+  }
+
+  @Override
+  public void renderGrid() throws IOException {
+    this.view.append(this.state.toString());
+  }
+
+  @Override
+  public void renderMessage(String message) throws IOException {
+    this.view.append(message);
   }
 }
