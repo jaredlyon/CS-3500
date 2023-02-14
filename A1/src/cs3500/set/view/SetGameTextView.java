@@ -13,9 +13,9 @@ public class SetGameTextView implements SetGameView {
   public Appendable view;
 
   /**
-   * Initializes the Viewer.
+   * Initializes the viewer such that System.out is the default.
    * @param state - The game's ModelState, aka current behavior
-   * @throws IllegalArgumentException when  the ModelState is null
+   * @throws IllegalArgumentException when the ModelState is null
    */
   public SetGameTextView(SetGameModelState state) throws IllegalArgumentException {
     if (state == null) {
@@ -26,6 +26,12 @@ public class SetGameTextView implements SetGameView {
     this.state = state;
   }
 
+  /**
+   * Initializes the viewer.
+   * @param state - The game's ModelState, aka the current behavior
+   * @param view - A 'view', which is an Appendable that rendered messages are sent to
+   * @throws IllegalArgumentException if any arguments are null
+   */
   public SetGameTextView(SetGameModelState state, Appendable view) throws IllegalArgumentException {
     if (state == null || view == null) {
       throw new IllegalArgumentException("State or view is null.");
@@ -54,7 +60,7 @@ public class SetGameTextView implements SetGameView {
 
   @Override
   public void renderGrid() throws IOException {
-    this.view.append(this.state.toString());
+    this.view.append(this.toString());
   }
 
   @Override

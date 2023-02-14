@@ -143,7 +143,7 @@ public class SetThreeGameModel implements SetGameModel {
   @Override
   public int getScore() throws IllegalStateException {
     if (score == -1) {
-      throw new IllegalStateException("Game has not been initialized (score check). IM THE BOOGY MAN");
+      throw new IllegalStateException("Game has not been initialized (score check).");
     } else {
       return score;
     }
@@ -219,6 +219,10 @@ public class SetThreeGameModel implements SetGameModel {
       throw new IllegalStateException("Game has not been initialized (isValidSet).");
     } else if (this.isBadCoord(coord1) || this.isBadCoord(coord2) || this.isBadCoord(coord3)) {
       throw new IllegalArgumentException("Bad coords (isValidSet).");
+    } else if (this.areSameCoord(coord1, coord2)
+            || this.areSameCoord(coord1, coord3)
+            || this.areSameCoord(coord2, coord3)) {
+      return false;
     } else {
       Card card1 = this.getCardAtCoord(coord1);
       Card card2 = this.getCardAtCoord(coord2);
