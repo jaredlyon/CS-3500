@@ -1,15 +1,15 @@
 import org.junit.Test;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.List;
 import java.util.Objects;
-
-import javax.naming.ldap.Control;
 
 import cs3500.set.controller.SetGameController;
 import cs3500.set.controller.SetGameControllerImpl;
 import cs3500.set.model.hw02.Coord;
 import cs3500.set.model.hw02.SetGameModel;
+import cs3500.set.model.hw02.SetGameModelState;
 import cs3500.set.model.hw02.SetThreeGameModel;
 import cs3500.set.view.SetGameTextView;
 import cs3500.set.view.SetGameView;
@@ -22,13 +22,16 @@ import static org.junit.Assert.fail;
  */
 public class SetGameControllerImplTest {
 
-  class ControllerConfirmInputsMock implements SetGameModel {
-    final StringBuilder log;
+  /**
+   * Represents a mock of the SetGameModel to confirm ClaimSet inputs from the controller.
+   */
+  static class ControllerConfirmClaimSetInputsMock extends SetThreeGameModel {
+    private final StringBuilder log;
     final int width;
     final int height;
     final int score;
 
-    ControllerConfirmInputsMock(StringBuilder log) {
+    ControllerConfirmClaimSetInputsMock(StringBuilder log) {
       this.log = Objects.requireNonNull(log);
       this.width = 3;
       this.height = 3;
@@ -39,53 +42,117 @@ public class SetGameControllerImplTest {
     public void claimSet(Coord coord1, Coord coord2, Coord coord3) {
       log.append(String.format("coord1 = %s, coord2 = %s, coord3 = %s\n", coord1, coord2, coord3));
     }
+  }
+
+  @Test
+  public void testClaimSet() {
+    Readable in = new StringReader("3 3 1 1 1 2 1 3 q");
+    Appendable out = new StringBuilder();
+
+    StringBuilder log = new StringBuilder();
+    SetGameModel model = new ControllerConfirmClaimSetInputsMock(log);
+    SetGameView view = new SetGameTextView(model, out);
+
+    SetGameController controller = new SetGameControllerImpl(model, view, in);
+    controller.playGame();
+
+    String[] lines = log.toString().split("\\r?\\n");
+
+    assertEquals("coord1 = (r0,c0), coord2 = (r0,c1), coord3 = (r0,c2)", lines[0]);
+  }
+
+  /**
+   * Represents a mock of the SetGameModel to confirm isValidSet inputs from the controller.
+   */
+  static class ControllerConfirmIsValidSetInputsMock extends SetThreeGameModel {
+    private final StringBuilder log;
+    final int width;
+    final int height;
+    final int score;
+
+    ControllerConfirmIsValidSetInputsMock(StringBuilder log) {
+      this.log = Objects.requireNonNull(log);
+      this.width = 3;
+      this.height = 3;
+      this.score = 0;
+    }
 
     @Override
-    public void startGameWithDeck(List deck, int height, int width)
-            throws IllegalArgumentException {
-      log.append(String.format("deck = %s, height = %d, width = %d\n", deck, height, width));
+    public boolean isValidSet(Coord coord1, Coord coord2, Coord coord3) {
+      log.append(String.format("coord1 = %s, coord2 = %s, coord3 = %s\n", coord1, coord2, coord3));
+      return true;
+    }
+  }
+
+  @Test
+  public void testIsValidSet() {
+    Readable in = new StringReader("3 3 1 1 1 2 1 3 q");
+    Appendable out = new StringBuilder();
+
+    StringBuilder log = new StringBuilder();
+    SetGameModel model = new ControllerConfirmIsValidSetInputsMock(log);
+    SetGameView view = new SetGameTextView(model, out);
+
+    SetGameController controller = new SetGameControllerImpl(model, view, in);
+    controller.playGame();
+
+    String[] lines = log.toString().split("\\r?\\n");
+
+    assertEquals("coord1 = (r0,c0), coord2 = (r0,c1), coord3 = (r0,c2)", lines[0]);
+  }
+
+  /**
+   * Represents a mock of the SetGameModel to confirm startGameWithDeck inputs from the controller.
+   */
+  static class ControllerConfirmStartGameInputsMock implements SetGameModel {
+
+    private final StringBuilder log;
+
+    ControllerConfirmStartGameInputsMock(StringBuilder log) {
+      this.log = Objects.requireNonNull(log);
+    }
+    @Override
+    public void claimSet(Coord coord1, Coord coord2, Coord coord3) {
+      // do nothing
+    }
+
+    @Override
+    public void startGameWithDeck(List deck, int height, int width) throws IllegalArgumentException {
+      log.append(String.format("deck = %s, height = %s, width = %s\n", deck, height, width));
     }
 
     @Override
     public int getWidth() throws IllegalStateException {
-      log.append(String.format("width = %d\n", this.width));
-      return this.width;
+      return 0;
     }
 
     @Override
     public int getHeight() throws IllegalStateException {
-      log.append(String.format("height = %d\n", this.height));
-      return this.height;
+      return 0;
     }
 
     @Override
     public int getScore() throws IllegalStateException {
-      log.append(String.format("score = %d\n", this.score));
-      return this.score;
+      return 0;
     }
 
     @Override
     public boolean anySetsPresent() {
-      log.append("anySetsPresent\n");
       return false;
     }
 
     @Override
-    public boolean isValidSet(Coord coord1, Coord coord2, Coord coord3)
-            throws IllegalArgumentException {
-      log.append(String.format("coord1 = %s, coord2 = %s, coord3 = %s\n", coord1, coord2, coord3));
+    public boolean isValidSet(Coord coord1, Coord coord2, Coord coord3) throws IllegalArgumentException {
       return false;
     }
 
     @Override
     public Object getCardAtCoord(int row, int col) {
-      log.append(String.format("row = %d, col = %d\n", row, col));
       return null;
     }
 
     @Override
     public Object getCardAtCoord(Coord coord) {
-      log.append(String.format("coord= %s\n", coord1, coord2, coord3));
       return null;
     }
 
@@ -98,6 +165,145 @@ public class SetGameControllerImplTest {
     public List getCompleteDeck() {
       return null;
     }
+  }
+
+  /**
+   * Represents a mock of the view for the startGameWithDeck input test.
+   */
+  static class ViewConfirmStartGameInputsMock implements SetGameView {
+    final SetGameModelState state;
+    final Appendable view;
+
+    public ViewConfirmStartGameInputsMock(SetGameModelState state, Appendable view)
+            throws IllegalArgumentException {
+      if (state == null || view == null) {
+        throw new IllegalArgumentException("State or view is null.");
+      }
+
+      this.state = state;
+      this.view = view;
+    }
+
+    @Override
+    public void renderGrid() throws IOException {
+      // do nothing
+    }
+
+    @Override
+    public void renderMessage(String message) throws IOException {
+      // do nothing
+    }
+  }
+
+  @Test
+  public void testStartGameWithDeck() {
+    Readable in = new StringReader("3 3 q");
+    Appendable out = new StringBuilder();
+
+    StringBuilder log = new StringBuilder();
+    SetGameModel model = new ControllerConfirmStartGameInputsMock(log);
+    SetGameView view = new ViewConfirmStartGameInputsMock(model, out);
+
+    SetGameController controller = new SetGameControllerImpl(model, view, in);
+    controller.playGame();
+
+    String[] lines = log.toString().split("\\r?\\n");
+
+    assertEquals("deck = null, height = 3, width = 3", lines[0]);
+  }
+
+  static class BadViewRenderGridExceptionMock implements SetGameView {
+    final SetGameModelState state;
+    final Appendable view;
+
+    public BadViewRenderGridExceptionMock(SetGameModelState state, Appendable view)
+            throws IllegalArgumentException {
+      if (state == null || view == null) {
+        throw new IllegalArgumentException("State or view is null.");
+      }
+
+      this.state = state;
+      this.view = view;
+    }
+
+    @Override
+    public void renderGrid() throws IOException {
+      throw new IOException();
+    }
+
+    @Override
+    public void renderMessage(String message) throws IOException {
+      this.view.append(message);
+    }
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void testRenderGridException() {
+    Readable in = new StringReader("3 3 1 2 1 1 1 3 q");
+    Appendable log = new StringBuilder();
+    SetGameModel model = new SetThreeGameModel();
+    SetGameView view = new BadViewRenderGridExceptionMock(model, log);
+    SetGameController controller = new SetGameControllerImpl(model, view, in);
+
+    controller.playGame();
+  }
+
+  static class BadViewRenderMessageExceptionMock implements SetGameView {
+    final SetGameModelState state;
+    final Appendable view;
+
+    public BadViewRenderMessageExceptionMock(SetGameModelState state, Appendable view)
+            throws IllegalArgumentException {
+      if (state == null || view == null) {
+        throw new IllegalArgumentException("State or view is null.");
+      }
+
+      this.state = state;
+      this.view = view;
+    }
+
+    @Override
+    public void renderGrid() throws IOException {
+      this.view.append(this.toString());
+    }
+
+    @Override
+    public void renderMessage(String message) throws IOException {
+      throw new IOException();
+    }
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void testRenderMessageException() {
+    Readable in = new StringReader("3 3 1 2 1 1 1 3 q");
+    Appendable log = new StringBuilder();
+    SetGameModel model = new SetThreeGameModel();
+    SetGameView view = new BadViewRenderMessageExceptionMock(model, log);
+    SetGameController controller = new SetGameControllerImpl(model, view, in);
+
+    controller.playGame();
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void testPlayGameExceptionOutOfInput() {
+    Readable in = new StringReader("1 3 3");
+    Appendable log = new StringBuilder();
+    SetGameModel model = new SetThreeGameModel();
+    SetGameView view = new SetGameTextView(model, log);
+    SetGameController controller = new SetGameControllerImpl(model, view, in);
+
+    controller.playGame();
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testControllerConstructorException() {
+    Readable in = new StringReader("1 3 3");
+    Appendable log = new StringBuilder();
+    SetGameModel model = new SetThreeGameModel();
+    SetGameView view = new SetGameTextView(model, log);
+    SetGameController controller = new SetGameControllerImpl(null, view, in);
+
+    controller.playGame();
   }
 
   @Test
