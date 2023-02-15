@@ -111,13 +111,15 @@ public class SetGameControllerImplTest {
     ControllerConfirmStartGameInputsMock(StringBuilder log) {
       this.log = Objects.requireNonNull(log);
     }
+
     @Override
     public void claimSet(Coord coord1, Coord coord2, Coord coord3) {
       // do nothing
     }
 
     @Override
-    public void startGameWithDeck(List deck, int height, int width) throws IllegalArgumentException {
+    public void startGameWithDeck(List deck, int height, int width)
+            throws IllegalArgumentException {
       log.append(String.format("deck = %s, height = %s, width = %s\n", deck, height, width));
     }
 
@@ -142,7 +144,8 @@ public class SetGameControllerImplTest {
     }
 
     @Override
-    public boolean isValidSet(Coord coord1, Coord coord2, Coord coord3) throws IllegalArgumentException {
+    public boolean isValidSet(Coord coord1, Coord coord2, Coord coord3)
+            throws IllegalArgumentException {
       return false;
     }
 
