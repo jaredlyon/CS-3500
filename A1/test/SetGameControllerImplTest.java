@@ -1,9 +1,14 @@
 import org.junit.Test;
 
 import java.io.StringReader;
+import java.util.List;
+import java.util.Objects;
+
+import javax.naming.ldap.Control;
 
 import cs3500.set.controller.SetGameController;
 import cs3500.set.controller.SetGameControllerImpl;
+import cs3500.set.model.hw02.Coord;
 import cs3500.set.model.hw02.SetGameModel;
 import cs3500.set.model.hw02.SetThreeGameModel;
 import cs3500.set.view.SetGameTextView;
@@ -16,6 +21,84 @@ import static org.junit.Assert.fail;
  * Represents the test suite for SetGameControllerImpl.
  */
 public class SetGameControllerImplTest {
+
+  class ControllerConfirmInputsMock implements SetGameModel {
+    final StringBuilder log;
+    final int width;
+    final int height;
+    final int score;
+
+    ControllerConfirmInputsMock(StringBuilder log) {
+      this.log = Objects.requireNonNull(log);
+      this.width = 3;
+      this.height = 3;
+      this.score = 0;
+    }
+
+    @Override
+    public void claimSet(Coord coord1, Coord coord2, Coord coord3) {
+      log.append(String.format("coord1 = %s, coord2 = %s, coord3 = %s\n", coord1, coord2, coord3));
+    }
+
+    @Override
+    public void startGameWithDeck(List deck, int height, int width)
+            throws IllegalArgumentException {
+      log.append(String.format("deck = %s, height = %d, width = %d\n", deck, height, width));
+    }
+
+    @Override
+    public int getWidth() throws IllegalStateException {
+      log.append(String.format("width = %d\n", this.width));
+      return this.width;
+    }
+
+    @Override
+    public int getHeight() throws IllegalStateException {
+      log.append(String.format("height = %d\n", this.height));
+      return this.height;
+    }
+
+    @Override
+    public int getScore() throws IllegalStateException {
+      log.append(String.format("score = %d\n", this.score));
+      return this.score;
+    }
+
+    @Override
+    public boolean anySetsPresent() {
+      log.append("anySetsPresent\n");
+      return false;
+    }
+
+    @Override
+    public boolean isValidSet(Coord coord1, Coord coord2, Coord coord3)
+            throws IllegalArgumentException {
+      log.append(String.format("coord1 = %s, coord2 = %s, coord3 = %s\n", coord1, coord2, coord3));
+      return false;
+    }
+
+    @Override
+    public Object getCardAtCoord(int row, int col) {
+      log.append(String.format("row = %d, col = %d\n", row, col));
+      return null;
+    }
+
+    @Override
+    public Object getCardAtCoord(Coord coord) {
+      log.append(String.format("coord= %s\n", coord1, coord2, coord3));
+      return null;
+    }
+
+    @Override
+    public boolean isGameOver() {
+      return false;
+    }
+
+    @Override
+    public List getCompleteDeck() {
+      return null;
+    }
+  }
 
   @Test
   public void testWelcomeMessage() {
@@ -280,16 +363,16 @@ public class SetGameControllerImplTest {
             + "1 1 1 2 1 3 " // good claim
             + "1 1 1 2 1 3 " // good claim
             + "1 1 1 2 1 3 " // good claim
-            + "1 1 1 1 1 1 " // bad claim (cards are the same)
+            + "4 1 3 2 2 3 " // bad claim (coordinates are out of bound)
             + "1 1 3 1 2 2 " // bad claim (cards dont match and are not the same)
             + "1 1 1 2 1 3 " // good claim
             + "1 1 1 2 1 3 " // good claim
             + "1 1 1 2 1 3 " // good claim
-            + "4 " // illegal card1Col claim
+            + "-4 " // illegal card1Col claim
             + "1 " // legal card1Col claim
             + "-1 " // illegal card1Row claim
             + "1 " // legal card1Row claim
-            + "4 " // illegal card2Col claim
+            + "-6 " // illegal card2Col claim
             + "1 " // legal card2Col claim
             + "-2 " // illegal card2Row claim
             + "2 " // legal card2Row claim
@@ -324,13 +407,13 @@ public class SetGameControllerImplTest {
     assertEquals("Nice job! Go again.", lines[128]);
     assertEquals("Time to claim a set!", lines[133]);
     assertEquals("Input first card column:", lines[134]);
-    assertEquals("Invalid card1Col input (out of bounds)! Please re-enter:", lines[135]);
+    assertEquals("Invalid firstCardRow input! Please re-enter:", lines[135]);
     assertEquals("Input first card row:", lines[136]);
-    assertEquals("Invalid card1Row input (non-digit)! Please re-enter:", lines[137]);
+    assertEquals("Invalid firstCardCol input! Please re-enter:", lines[137]);
     assertEquals("Input second card column:", lines[138]);
-    assertEquals("Invalid card2Col input (out of bounds)! Please re-enter:", lines[139]);
+    assertEquals("Invalid secondCardRow input! Please re-enter:", lines[139]);
     assertEquals("Input second card row:", lines[140]);
-    assertEquals("Invalid card2Row input (non-digit)! Please re-enter:", lines[141]);
+    assertEquals("Invalid secondCardCol input! Please re-enter:", lines[141]);
     assertEquals("Input third card column:", lines[142]);
     assertEquals("Input third card row:", lines[143]);
     assertEquals("Nice job! Go again.", lines[144]);

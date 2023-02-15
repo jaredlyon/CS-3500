@@ -47,12 +47,12 @@ public class SetGameControllerImpl implements SetGameController {
     Scanner sc = new Scanner(this.in);
     int inputHeight;
     int inputWidth;
-    int card1Col;
-    int card1Row;
-    int card2Col;
-    int card2Row;
-    int card3Col;
-    int card3Row;
+    int firstCardRow;
+    int firstCardCol;
+    int secondCardRow;
+    int secondCardCol;
+    int thirdCardRow;
+    int thirdCardCol;
 
     // overall instruction
     try {
@@ -201,7 +201,7 @@ public class SetGameControllerImpl implements SetGameController {
 
       // grab user input
       try {
-        card1Col = this.processInput(sc.next());
+        firstCardRow = this.processInput(sc.next());
       } catch (NoSuchElementException e) {
         throw new IllegalStateException("Out of input!");
       }
@@ -209,40 +209,25 @@ public class SetGameControllerImpl implements SetGameController {
 
       while (!isCard1ColValid) {
         // check for quit
-        if (card1Col == -1) {
+        if (firstCardRow == -1) {
           this.quitGame();
           return;
-        } else
+        } else if (firstCardRow == -2) {
           // check for invalid input
-          if (card1Col == -2) {
+          try {
+            this.view.renderMessage("Invalid firstCardRow input! Please re-enter:\n");
             try {
-              this.view.renderMessage("Invalid card1Col input (non-digit)! Please re-enter:\n");
-              try {
-                card1Col = this.processInput(sc.next());
-              } catch (NoSuchElementException e) {
-                throw new IllegalStateException("Out of input!");
-              }
-            } catch (IOException e) {
-              throw new IllegalStateException(e);
+              firstCardRow = this.processInput(sc.next());
+            } catch (NoSuchElementException e) {
+              throw new IllegalStateException("Out of input!");
             }
-          } else
-            // check for invalid bounds
-            if (card1Col < 1 || card1Col > this.model.getHeight()) {
-              try {
-                this.view.renderMessage("Invalid card1Col input (out of bounds)! "
-                        + "Please re-enter:\n");
-                try {
-                  card1Col = this.processInput(sc.next());
-                } catch (NoSuchElementException e) {
-                  throw new IllegalStateException("Out of input!");
-                }
-              } catch (IOException e) {
-                throw new IllegalStateException(e);
-              }
-            } else {
-              isCard1ColValid = true;
-              card1Col--;
-            }
+          } catch (IOException e) {
+            throw new IllegalStateException(e);
+          }
+        } else {
+          isCard1ColValid = true;
+          firstCardRow--;
+        }
       }
 
       // instruct for first card row
@@ -254,7 +239,7 @@ public class SetGameControllerImpl implements SetGameController {
 
       // grab user input
       try {
-        card1Row = this.processInput(sc.next());
+        firstCardCol = this.processInput(sc.next());
       } catch (NoSuchElementException e) {
         throw new IllegalStateException("Out of input!");
       }
@@ -262,40 +247,25 @@ public class SetGameControllerImpl implements SetGameController {
 
       while (!isCard1RowValid) {
         // check for quit
-        if (card1Row == -1) {
+        if (firstCardCol == -1) {
           this.quitGame();
           return;
-        } else
+        } else if (firstCardCol == -2) {
           // check for invalid input
-          if (card1Row == -2) {
+          try {
+            this.view.renderMessage("Invalid firstCardCol input! Please re-enter:\n");
             try {
-              this.view.renderMessage("Invalid card1Row input (non-digit)! Please re-enter:\n");
-              try {
-                card1Row = this.processInput(sc.next());
-              } catch (NoSuchElementException e) {
-                throw new IllegalStateException("Out of input!");
-              }
-            } catch (IOException e) {
-              throw new IllegalStateException(e);
+              firstCardCol = this.processInput(sc.next());
+            } catch (NoSuchElementException e) {
+              throw new IllegalStateException("Out of input!");
             }
-          } else
-            // check for invalid bounds
-            if (card1Row < 1 || card1Row > this.model.getWidth()) {
-              try {
-                this.view.renderMessage("Invalid card1Row input (out of bounds)! "
-                        + "Please re-enter:\n");
-                try {
-                  card1Row = this.processInput(sc.next());
-                } catch (NoSuchElementException e) {
-                  throw new IllegalStateException("Out of input!");
-                }
-              } catch (IOException e) {
-                throw new IllegalStateException(e);
-              }
-            } else {
-              isCard1RowValid = true;
-              card1Row--;
-            }
+          } catch (IOException e) {
+            throw new IllegalStateException(e);
+          }
+        } else {
+          isCard1RowValid = true;
+          firstCardCol--;
+        }
       }
 
       // instruct for second card col
@@ -307,7 +277,7 @@ public class SetGameControllerImpl implements SetGameController {
 
       // grab user input
       try {
-        card2Col = this.processInput(sc.next());
+        secondCardRow = this.processInput(sc.next());
       } catch (NoSuchElementException e) {
         throw new IllegalStateException("Out of input!");
       }
@@ -315,40 +285,26 @@ public class SetGameControllerImpl implements SetGameController {
 
       while (!isCard2ColValid) {
         // check for quit
-        if (card2Col == -1) {
+        if (secondCardRow == -1) {
           this.quitGame();
           return;
-        } else
+        } else if (secondCardRow == -2) {
           // check for invalid input
-          if (card2Col == -2) {
+          try {
+            this.view.renderMessage("Invalid secondCardRow input! "
+                    + "Please re-enter:\n");
             try {
-              this.view.renderMessage("Invalid card2Col input (non-digit)! Please re-enter:\n");
-              try {
-                card2Col = this.processInput(sc.next());
-              } catch (NoSuchElementException e) {
-                throw new IllegalStateException("Out of input!");
-              }
-            } catch (IOException e) {
-              throw new IllegalStateException(e);
+              secondCardRow = this.processInput(sc.next());
+            } catch (NoSuchElementException e) {
+              throw new IllegalStateException("Out of input!");
             }
-          } else
-            // check for invalid bounds
-            if (card2Col < 1 || card2Col > this.model.getHeight()) {
-              try {
-                this.view.renderMessage("Invalid card2Col input (out of bounds)! "
-                        + "Please re-enter:\n");
-                try {
-                  card2Col = this.processInput(sc.next());
-                } catch (NoSuchElementException e) {
-                  throw new IllegalStateException("Out of input!");
-                }
-              } catch (IOException e) {
-                throw new IllegalStateException(e);
-              }
-            } else {
-              isCard2ColValid = true;
-              card2Col--;
-            }
+          } catch (IOException e) {
+            throw new IllegalStateException(e);
+          }
+        } else {
+          isCard2ColValid = true;
+          secondCardRow--;
+        }
       }
 
       // instruct for second card row
@@ -360,7 +316,7 @@ public class SetGameControllerImpl implements SetGameController {
 
       // grab user input
       try {
-        card2Row = this.processInput(sc.next());
+        secondCardCol = this.processInput(sc.next());
       } catch (NoSuchElementException e) {
         throw new IllegalStateException("Out of input!");
       }
@@ -368,40 +324,25 @@ public class SetGameControllerImpl implements SetGameController {
 
       while (!isCard2RowValid) {
         // check for quit
-        if (card2Row == -1) {
+        if (secondCardCol == -1) {
           this.quitGame();
           return;
-        } else
+        } else if (secondCardCol == -2) {
           // check for invalid input
-          if (card2Row == -2) {
+          try {
+            this.view.renderMessage("Invalid secondCardCol input! Please re-enter:\n");
             try {
-              this.view.renderMessage("Invalid card2Row input (non-digit)! Please re-enter:\n");
-              try {
-                card2Row = this.processInput(sc.next());
-              } catch (NoSuchElementException e) {
-                throw new IllegalStateException("Out of input!");
-              }
-            } catch (IOException e) {
-              throw new IllegalStateException(e);
+              secondCardCol = this.processInput(sc.next());
+            } catch (NoSuchElementException e) {
+              throw new IllegalStateException("Out of input!");
             }
-          } else
-            // check for invalid bounds
-            if (card2Row < 1 || card2Row > this.model.getWidth()) {
-              try {
-                this.view.renderMessage("Invalid card2Row input (out of bounds)! "
-                        + "Please re-enter:\n");
-                try {
-                  card2Row = this.processInput(sc.next());
-                } catch (NoSuchElementException e) {
-                  throw new IllegalStateException("Out of input!");
-                }
-              } catch (IOException e) {
-                throw new IllegalStateException(e);
-              }
-            } else {
-              isCard2RowValid = true;
-              card2Row--;
-            }
+          } catch (IOException e) {
+            throw new IllegalStateException(e);
+          }
+        } else {
+          isCard2RowValid = true;
+          secondCardCol--;
+        }
       }
 
       // instruct for third card col
@@ -413,7 +354,7 @@ public class SetGameControllerImpl implements SetGameController {
 
       // grab user input
       try {
-        card3Col = this.processInput(sc.next());
+        thirdCardRow = this.processInput(sc.next());
       } catch (NoSuchElementException e) {
         throw new IllegalStateException("Out of input!");
       }
@@ -421,40 +362,25 @@ public class SetGameControllerImpl implements SetGameController {
 
       while (!isCard3ColValid) {
         // check for quit
-        if (card3Col == -1) {
+        if (thirdCardRow == -1) {
           this.quitGame();
           return;
-        } else
+        } else if (thirdCardRow == -2) {
           // check for invalid input
-          if (card3Col == -2) {
+          try {
+            this.view.renderMessage("Invalid thirdCardRow input! Please re-enter:\n");
             try {
-              this.view.renderMessage("Invalid card3Col input (non-digit)! Please re-enter:\n");
-              try {
-                card3Col = this.processInput(sc.next());
-              } catch (NoSuchElementException e) {
-                throw new IllegalStateException("Out of input!");
-              }
-            } catch (IOException e) {
-              throw new IllegalStateException(e);
+              thirdCardRow = this.processInput(sc.next());
+            } catch (NoSuchElementException e) {
+              throw new IllegalStateException("Out of input!");
             }
-          } else
-            // check for invalid bounds
-            if (card3Col < 1 || card3Col > this.model.getHeight()) {
-              try {
-                this.view.renderMessage("Invalid card3Col input (out of bounds)! "
-                        + "Please re-enter:\n");
-                try {
-                  card3Col = this.processInput(sc.next());
-                } catch (NoSuchElementException e) {
-                  throw new IllegalStateException("Out of input!");
-                }
-              } catch (IOException e) {
-                throw new IllegalStateException(e);
-              }
-            } else {
-              isCard3ColValid = true;
-              card3Col--;
-            }
+          } catch (IOException e) {
+            throw new IllegalStateException(e);
+          }
+        } else {
+          isCard3ColValid = true;
+          thirdCardRow--;
+        }
       }
 
       // instruct for third card row
@@ -466,7 +392,7 @@ public class SetGameControllerImpl implements SetGameController {
 
       // grab user input
       try {
-        card3Row = this.processInput(sc.next());
+        thirdCardCol = this.processInput(sc.next());
       } catch (NoSuchElementException e) {
         throw new IllegalStateException("Out of input!");
       }
@@ -474,47 +400,32 @@ public class SetGameControllerImpl implements SetGameController {
 
       while (!isCard3RowValid) {
         // check for quit
-        if (card3Row == -1) {
+        if (thirdCardCol == -1) {
           this.quitGame();
           return;
-        } else
+        } else if (thirdCardCol == -2) {
           // check for invalid input
-          if (card3Row == -2) {
+          try {
+            this.view.renderMessage("Invalid thirdCardCol input! "
+                    + "Please re-enter:\n");
             try {
-              this.view.renderMessage("Invalid card3Row input (non-digit)! "
-                      + "Please re-enter:\n");
-              try {
-                card3Row = this.processInput(sc.next());
-              } catch (NoSuchElementException e) {
-                throw new IllegalStateException("Out of input!");
-              }
-            } catch (IOException e) {
-              throw new IllegalStateException(e);
+              thirdCardCol = this.processInput(sc.next());
+            } catch (NoSuchElementException e) {
+              throw new IllegalStateException("Out of input!");
             }
-          } else
-            // check for invalid bounds
-            if (card3Row < 1 || card3Row > this.model.getWidth()) {
-              try {
-                this.view.renderMessage("Invalid card3Row input (out of bounds)! "
-                        + "Please re-enter:\n");
-                try {
-                  card3Row = this.processInput(sc.next());
-                } catch (NoSuchElementException e) {
-                  throw new IllegalStateException("Out of input!");
-                }
-              } catch (IOException e) {
-                throw new IllegalStateException(e);
-              }
-            } else {
-              isCard3RowValid = true;
-              card3Row--;
-            }
+          } catch (IOException e) {
+            throw new IllegalStateException(e);
+          }
+        } else {
+          isCard3RowValid = true;
+          thirdCardCol--;
+        }
       }
 
       // convert inputs to coords
-      Coord card1Coord = new Coord(card1Col, card1Row);
-      Coord card2Coord = new Coord(card2Col, card2Row);
-      Coord card3Coord = new Coord(card3Col, card3Row);
+      Coord card1Coord = new Coord(firstCardRow, firstCardCol);
+      Coord card2Coord = new Coord(secondCardRow, secondCardCol);
+      Coord card3Coord = new Coord(thirdCardRow, thirdCardCol);
 
       // checks for a valid claim data
       try {
@@ -563,11 +474,17 @@ public class SetGameControllerImpl implements SetGameController {
     }
   }
 
+  /**
+   * Processes Strings generated by the .next() Scanner method.
+   *
+   * @param in the String returned by the scanner
+   * @return an integer representing a processed game output
+   */
   private int processInput(String in) {
     try {
       int parsedInput = Integer.parseInt(in);
 
-      if (parsedInput < 0) {
+      if (parsedInput <= 0) {
         return -2; // flags bad input
       } else {
         return parsedInput;
@@ -581,6 +498,9 @@ public class SetGameControllerImpl implements SetGameController {
     }
   }
 
+  /**
+   * Quits the game.
+   */
   private void quitGame() {
     try {
       this.view.renderMessage("Game quit!\n"
