@@ -1,7 +1,6 @@
 package cs3500.set;
 
 import java.io.InputStreamReader;
-import java.util.Scanner;
 
 import cs3500.set.controller.SetGameController;
 import cs3500.set.controller.SetGameControllerImpl;
@@ -20,22 +19,24 @@ public final class SetGame {
    * @param args - a String[] determining which version to play
    */
   public static void main(String[] args) {
-    System.out.println("Enter 'three' or 'general':");
-    Scanner sc = new Scanner(System.in);
-    String game = sc.next();
-
-    if (game.equals("three")) {
-      SetGameModel model = new SetThreeGameModel();
-      SetGameView view = new SetGameTextView(model);
-      Readable in = new InputStreamReader(System.in);
-      SetGameController controller = new SetGameControllerImpl(model, view, in);
-      controller.playGame();
-    } else if (game.equals("general")) {
-      SetGameModel model = new GeneralSetGameModel();
-      SetGameView view = new SetGameTextView(model);
-      Readable in = new InputStreamReader(System.in);
-      SetGameController controller = new SetGameControllerImpl(model, view, in);
-      controller.playGame();
+    if (args.length > 0) {
+      for (String argument : args) {
+        if (argument.equals("three")) {
+          SetGameModel model = new SetThreeGameModel();
+          SetGameView view = new SetGameTextView(model);
+          Readable in = new InputStreamReader(System.in);
+          SetGameController controller = new SetGameControllerImpl(model, view, in);
+          controller.playGame();
+        } else if (argument.equals("general")) {
+          SetGameModel model = new GeneralSetGameModel();
+          SetGameView view = new SetGameTextView(model);
+          Readable in = new InputStreamReader(System.in);
+          SetGameController controller = new SetGameControllerImpl(model, view, in);
+          controller.playGame();
+        }
+      }
+    } else {
+      System.out.println("No arguments found.");
     }
   }
 }
