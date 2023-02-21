@@ -1,18 +1,19 @@
-package cs3500.set.model.hw02;
+package cs3500.set.model.hw03;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import cs3500.set.model.hw03.ASetGameModel;
+import cs3500.set.model.hw02.Card;
+import cs3500.set.model.hw02.Coord;
 
 /**
- * Represents a game of SetThree.
+ * Represents a game of GeneralSet.
  */
-public class SetThreeGameModel extends ASetGameModel {
+public class GeneralSetGameModel extends ASetGameModel {
   /**
    * Constructs a new, blank Game Model.
    */
-  public SetThreeGameModel() {
+  public GeneralSetGameModel() {
     super();
   }
 
@@ -53,6 +54,19 @@ public class SetThreeGameModel extends ASetGameModel {
       if (this.deck.size() < 3) {
         this.lastTurn = true;
       }
+
+      while (!anySetsPresent()) {
+        try {
+          ArrayList<Card> row = new ArrayList<Card>();
+          for (int j = 0; j < this.getWidth(); j++) {
+            row.add(this.deck.remove(0));
+          }
+          this.cards.add(row);
+        } catch (Exception e) {
+          this.gameOver = true;
+          break;
+        }
+      }
     } else if (!this.isValidSet(coord1, coord2, coord3)) {
       throw new IllegalArgumentException("Not a set!");
     }
@@ -69,21 +83,40 @@ public class SetThreeGameModel extends ASetGameModel {
    */
   @Override
   public void startGameWithDeck(List deck, int height, int width) throws IllegalArgumentException {
-    if (height != 3 || width != 3) {
-      throw new IllegalArgumentException("Invalid grid arguments.");
-    } else if (deck == null || deck.size() < 9) {
+    if (deck == null) {
+      throw new IllegalArgumentException("Deck cannot be null.");
+    } else if (deck.size() < (height * width)) {
       throw new IllegalArgumentException("Not enough cards in deck!");
+    } else if (height < 0 || width < 0) {
+      throw new IllegalArgumentException("Height/width cannot be negative.");
+    } else if ((height * width) < 3) {
+      throw new IllegalArgumentException("Game must initialize with at least three cards.");
     }
 
     this.deck = deck;
-    this.score += 1;
+    this.score = 0;
+    this.cards.clear();
 
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < height; i++) {
       ArrayList<Card> row = new ArrayList<Card>();
-      for (int j = 0; j < 3; j++) {
+      for (int j = 0; j < width; j++) {
         row.add(this.deck.remove(0));
       }
       this.cards.add(row);
+    }
+
+    while (!this.anySetsPresent()) {
+      try {
+        ArrayList<Card> row = new ArrayList<Card>();
+        for (int i = 0; i < this.getWidth(); i++) {
+          row.add(this.deck.remove(0));
+        }
+        this.cards.add(row);
+      } catch (Exception e) {
+        this.gameOver = true;
+        this.isGameOver();
+        break;
+      }
     }
   }
 }

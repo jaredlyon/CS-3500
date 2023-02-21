@@ -146,7 +146,8 @@ public class SetGameControllerImpl implements SetGameController {
       }
 
       // start game
-      if (inputHeight == 3 && inputWidth == 3) {
+      try {
+        this.model.startGameWithDeck(this.model.getCompleteDeck(), inputHeight, inputWidth);
         goodStart = true;
 
         // confirm game start to user
@@ -158,13 +159,11 @@ public class SetGameControllerImpl implements SetGameController {
         } catch (IOException e) {
           throw new IllegalStateException(e);
         }
-
-        this.model.startGameWithDeck(this.model.getCompleteDeck(), inputHeight, inputWidth);
-      } else {
+      } catch (IllegalArgumentException e) {
         try {
           this.view.renderMessage("Invalid height/width. Try again.\n");
-        } catch (IOException e) {
-          throw new IllegalStateException(e);
+        } catch (IOException e1) {
+          throw new IllegalStateException(e1);
         }
       }
     }
@@ -194,7 +193,7 @@ public class SetGameControllerImpl implements SetGameController {
 
       // instruct for first card column
       try {
-        this.view.renderMessage("Input first card column:\n");
+        this.view.renderMessage("Input first card row:\n");
       } catch (IOException e) {
         throw new IllegalStateException(e);
       }
@@ -232,7 +231,7 @@ public class SetGameControllerImpl implements SetGameController {
 
       // instruct for first card row
       try {
-        this.view.renderMessage("Input first card row:\n");
+        this.view.renderMessage("Input first card column:\n");
       } catch (IOException e) {
         throw new IllegalStateException(e);
       }
@@ -270,7 +269,7 @@ public class SetGameControllerImpl implements SetGameController {
 
       // instruct for second card col
       try {
-        this.view.renderMessage("Input second card column:\n");
+        this.view.renderMessage("Input second card row:\n");
       } catch (IOException e) {
         throw new IllegalStateException(e);
       }
@@ -309,7 +308,7 @@ public class SetGameControllerImpl implements SetGameController {
 
       // instruct for second card row
       try {
-        this.view.renderMessage("Input second card row:\n");
+        this.view.renderMessage("Input second card column:\n");
       } catch (IOException e) {
         throw new IllegalStateException(e);
       }
@@ -347,7 +346,7 @@ public class SetGameControllerImpl implements SetGameController {
 
       // instruct for third card col
       try {
-        this.view.renderMessage("Input third card column:\n");
+        this.view.renderMessage("Input third card row:\n");
       } catch (IOException e) {
         throw new IllegalStateException(e);
       }
@@ -385,7 +384,7 @@ public class SetGameControllerImpl implements SetGameController {
 
       // instruct for third card row
       try {
-        this.view.renderMessage("Input third card row:\n");
+        this.view.renderMessage("Input third card column:\n");
       } catch (IOException e) {
         throw new IllegalStateException(e);
       }

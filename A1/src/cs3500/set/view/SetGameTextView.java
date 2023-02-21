@@ -47,15 +47,23 @@ public class SetGameTextView implements SetGameView {
    */
   @Override
   public String toString() {
-    return state.getCardAtCoord(0, 0).toString() + " "
-            + state.getCardAtCoord(0, 1).toString() + " "
-            + state.getCardAtCoord(0, 2).toString() + "\n"
-            + state.getCardAtCoord(1, 0).toString() + " "
-            + state.getCardAtCoord(1, 1).toString() + " "
-            + state.getCardAtCoord(1, 2).toString() + "\n"
-            + state.getCardAtCoord(2, 0).toString() + " "
-            + state.getCardAtCoord(2, 1).toString() + " "
-            + state.getCardAtCoord(2, 2).toString();
+    String output = "";
+
+    for (int i = 0; i < this.state.getHeight(); i++) {
+      for (int j = 0; j < this.state.getWidth(); j++) {
+        output += state.getCardAtCoord(i, j).toString();
+
+        if (j != (this.state.getWidth() - 1)) {
+          output += " ";
+        }
+      }
+
+      if (i != (this.state.getHeight() - 1)) {
+        output += "\n";
+      }
+    }
+
+    return output;
   }
 
   @Override
