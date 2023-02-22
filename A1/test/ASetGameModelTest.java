@@ -56,6 +56,11 @@ public abstract class ASetGameModelTest {
     assertEquals(3, testConstructor.getHeight());
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void testInvalidDeck() {
+    SetGameModel testConstructor= this.generateModel();
+    testConstructor.startGameWithDeck(null, 3, 3);
+  }
 
   @Test
   public void testClaimSet() {

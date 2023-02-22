@@ -255,4 +255,28 @@ public class GeneralSetGameModelTest extends ASetGameModelTest {
     assertEquals(1, model.getHeight());
     assertEquals(4, model.getWidth());
   }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testGeneralModelRejectsBadArgs() {
+    SetGameModel model = this.generateModel();
+    List<Card> deck = new ArrayList<Card>();
+    deck.add(new Card(1, "full", "diamond"));
+    deck.add(new Card(1, "full", "squiggle"));
+    deck.add(new Card(1, "full", "oval"));
+    deck.add(new Card(1, "full", "squiggle"));
+    deck.add(new Card(2, "full", "squiggle"));
+    deck.add(new Card(3, "full", "oval"));
+    deck.add(new Card(2, "full", "diamond"));
+    deck.add(new Card(2, "full", "squiggle"));
+    deck.add(new Card(2, "full", "oval"));
+    deck.add(new Card(3, "striped", "diamond"));
+    deck.add(new Card(3, "striped", "squiggle"));
+    deck.add(new Card(3, "striped", "oval"));
+    deck.add(new Card(2, "empty", "oval"));
+
+    model.startGameWithDeck(deck, -1, 4);
+    model.startGameWithDeck(deck, 1, -4);
+    model.startGameWithDeck(deck, 4, 4);
+    model.startGameWithDeck(null, 1, 4);
+  }
 }
