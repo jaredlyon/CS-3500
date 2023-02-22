@@ -18,7 +18,55 @@ public abstract class ASetGameModel implements SetGameModel {
   protected boolean lastTurn = false;
 
   /**
+   * Attempts to claim a set of three cards as a SET.
+   *
+   * @param coord1 - the coordinates of the first card
+   * @param coord2 - the coordinates of the second card
+   * @param coord3 - the coordinates of the third card
+   * @throws IllegalArgumentException if the coordinates are invalid
+   * @throws IllegalStateException    if the game has not started or parameters do not make a SET
+   */
+  @Override
+  public void claimSet(Coord coord1, Coord coord2, Coord coord3)
+          throws IllegalArgumentException, IllegalStateException {
+    // checks if the game has started
+    int height = cards.size();
+    if (height == 0) {
+      throw new IllegalStateException("Game has not been initialized (width check).");
+    }
+
+    // checks if the coords are okay
+    if (this.isBadCoord(coord1) || this.isBadCoord(coord2) || this.isBadCoord(coord3)) {
+      throw new IllegalArgumentException("Invalid coord(s) (claimSet).");
+    }
+  }
+
+  /**
+   * Starts a game of SET with given parameters.
+   *
+   * @param deck   - the list of cards in the order they will be played
+   * @param height - the height of the board for this game
+   * @param width  - the width of the board for this game
+   * @throws IllegalArgumentException if the grid parameters are not 3x3 or given deck is too small
+   */
+  @Override
+  public void startGameWithDeck(List deck, int height, int width) throws IllegalArgumentException {
+    this.deck = deck;
+    this.score = 0;
+    this.cards.clear();
+
+    for (int i = 0; i < height; i++) {
+      ArrayList<Card> row = new ArrayList<Card>();
+      for (int j = 0; j < width; j++) {
+        row.add(this.deck.remove(0));
+      }
+      this.cards.add(row);
+    }
+  }
+
+  /**
    * Checks if a given coord is 'bad' or 'out of bounds'.
+   *
    * @param coord - the coord to be tested
    * @return a boolean representing if the coord is out of expected bounds
    */
@@ -29,6 +77,7 @@ public abstract class ASetGameModel implements SetGameModel {
 
   /**
    * Gets the width of the current grid.
+   *
    * @return an integer representing width
    * @throws IllegalStateException if the game has not started yet
    */
@@ -46,6 +95,7 @@ public abstract class ASetGameModel implements SetGameModel {
 
   /**
    * Gets the height of the current grid.
+   *
    * @return an integer representing height
    * @throws IllegalStateException if the game has not started yet
    */
@@ -62,6 +112,7 @@ public abstract class ASetGameModel implements SetGameModel {
 
   /**
    * Gets the current score of the ongoing game.
+   *
    * @return An integer representing score
    * @throws IllegalStateException if the game has not started yet
    */
@@ -76,6 +127,7 @@ public abstract class ASetGameModel implements SetGameModel {
 
   /**
    * Checks if there are any possible sets left on the board.
+   *
    * @return a boolean representing set presence
    */
   @Override
@@ -107,6 +159,7 @@ public abstract class ASetGameModel implements SetGameModel {
 
   /**
    * Checks if two coordinates are the same for anySetsPresent.
+   *
    * @param coord1 - the first coord
    * @param coord2 - the second coord
    * @return a boolean representing coord equality
@@ -117,11 +170,12 @@ public abstract class ASetGameModel implements SetGameModel {
 
   /**
    * Checks if three given coordinates create a valid SET.
+   *
    * @param coord1 - the coordinates of the first card
    * @param coord2 - the coordinates of the second card
    * @param coord3 - the coordinates of the third card
    * @return A boolean value representing a valid SET
-   * @throws IllegalStateException if the game has not started yet
+   * @throws IllegalStateException    if the game has not started yet
    * @throws IllegalArgumentException if the coordinates are invalid
    */
   @Override
@@ -164,10 +218,11 @@ public abstract class ASetGameModel implements SetGameModel {
 
   /**
    * Retrieves the Card Object from a given Coord.
+   *
    * @param row - the row of the desired card
    * @param col - the column of the desired card
    * @return a Card from the board
-   * @throws IllegalStateException if the game has not started yet
+   * @throws IllegalStateException    if the game has not started yet
    * @throws IllegalArgumentException if the coordinates are invalid
    */
   @Override
@@ -184,9 +239,10 @@ public abstract class ASetGameModel implements SetGameModel {
 
   /**
    * Retrieves the Card Object from a given Coord.
+   *
    * @param coord the coordinates of the desired card
    * @return a Card from the board
-   * @throws IllegalStateException if the game has not started yet
+   * @throws IllegalStateException    if the game has not started yet
    * @throws IllegalArgumentException if the coordinates are invalid
    */
   @Override
@@ -206,6 +262,7 @@ public abstract class ASetGameModel implements SetGameModel {
 
   /**
    * Checks if the game is over.
+   *
    * @return a boolean value representing finish state
    */
   @Override
@@ -215,6 +272,7 @@ public abstract class ASetGameModel implements SetGameModel {
 
   /**
    * Generates a new deck from scratch.
+   *
    * @return a List of cards
    */
   @Override
