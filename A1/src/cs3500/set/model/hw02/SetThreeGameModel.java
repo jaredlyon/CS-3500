@@ -1,6 +1,5 @@
 package cs3500.set.model.hw02;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cs3500.set.model.hw03.ASetGameModel;

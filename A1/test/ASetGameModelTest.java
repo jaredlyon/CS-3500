@@ -46,7 +46,7 @@ public abstract class ASetGameModelTest {
 
   @Test
   public void testConstructor() {
-    SetGameModel testConstructor= this.generateModel();
+    SetGameModel testConstructor = this.generateModel();
 
     // must start the game to check params
     testConstructor.startGameWithDeck(this.startDeck, 3, 3);
@@ -58,7 +58,7 @@ public abstract class ASetGameModelTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidDeck() {
-    SetGameModel testConstructor= this.generateModel();
+    SetGameModel testConstructor = this.generateModel();
     testConstructor.startGameWithDeck(null, 3, 3);
   }
 
